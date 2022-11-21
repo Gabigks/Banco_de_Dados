@@ -1,0 +1,131 @@
+1 -
+
+2- a)
+select l.dscr
+from level l
+where l.aclevel not in (select level from sailor);
+b)
+select l.dscr
+from level l left join sailor s on l.aclevel = s.level
+where s.sid is null;
+c)
+select dscr
+from level
+except
+select l.dscr
+from level l join sailor s on l.aclevel = s.level;
+
+3- 
+select bt.dscr
+from boattype bt left join boat b on bt.id = b.btype
+where b.bid is null;
+
+4-
+select b.*
+from boat b join boattype bt on b.btype = bt.id
+where bt.dscr = 'Catamaran'
+and b.phorses>30;
+
+5-
+select s.name, b.name, r.dhour, r.dhourret
+from sailor s natural join reserve r
+join boat b on r.bid = b.bid
+join level l on s.level = l.aclevel
+join boattype bt on b.btype = bt.id
+where l.dscr = 'Youth'
+and bt.dscr = 'Fishing';
+
+6-
+select b.*
+from boat b
+where b.len < 10;
+
+7-
+select count(r.bid)
+from reserve r
+where r.dhour::date = '01-05-2019'; / where date(r.dhour) = '01-05-2019'; / where r.dhour between '01-05-2019 00:00:00' and '01-05-2019 23:59:59'
+
+8-
+select bt.dscr, avg(b.phorses)
+from boat b join boattype bt on b.type = bt.id
+where bt.dscr = 'Catamaran'
+group by bt.dscr;
+
+9-
+select bt.dscr, max(b.phorses)
+from boat b join boattype bt on b.type = bt.id
+group by bt.dscr;
+
+10-
+select l.dscr, count(s.sid)
+from level l left join sailor s on l.aclevel = s.level
+group by l.dscr;
+
+11-
+select *
+from boat b left join reserve r;
+
+12-
+select s.name, b.name
+from sailor s natural join reserve r
+join boat b on b.bid = r.bid
+where r.dhourret is null;
+
+13-
+select s.name, b.name
+from sailor s natural join reserve r
+join boat b on b.bid = r.bid
+where(r.dhourret - r.dhour) = (select max(r.dhourret - r.dhour) from reserve r);
+
+14-
+select *
+from boat
+where bid not in(select bid from reserve); 
+
+15-
+select b.name, r.dhourret - r.dhour as elapsedtime
+from boat b natural join reserve r;
+
+20-
+select s.*
+from sailor s natural join reserve r 
+group by s.sid
+having count(s.sid)
+> select avg(qtr)
+from
+(select count(r.sid) as qtr
+from reserve r
+group by r.sid)t;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
